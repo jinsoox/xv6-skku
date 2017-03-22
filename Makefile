@@ -244,4 +244,4 @@ STUDENTID=2011311671
 # DO NOT EDIT
 tarball:
 	make clean
-	tar cvzf ../xv6-project-$(PROJECTNUM)-$(STUDENTID).tar.gz .
+	tar --exclude='docs' --exclude='.git' -cvzf ../xv6-project-$(PROJECTNUM)-$(STUDENTID).tar.gz .
