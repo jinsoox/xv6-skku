@@ -96,3 +96,10 @@ sys_halt(void)
   outw(0xB004, 0x0|0x2000);
   return 0;
 }
+
+int
+sys_yield(void)
+{
+  yield();
+  return 0;
+}
