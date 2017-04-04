@@ -237,7 +237,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 # SKKU operating system
-PROJECTNUM=2
+PROJECTNUM=2-2
 # enter your ID
 STUDENTID=2011311671
 
