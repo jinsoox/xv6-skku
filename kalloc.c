@@ -1,4 +1,4 @@
-// Physical memory allocator, intended to allocate
+// Physical memory slab, intended to allocate
 // memory for user processes, kernel stacks, page table pages,
 // and pipe buffers. Allocates 4096-byte pages.
 
@@ -40,6 +40,7 @@ kinit2(void *vstart, void *vend)
 {
   freerange(vstart, vend);
   kmem.use_lock = 1;
+  slabinit();
 }
 
 void
@@ -55,7 +56,7 @@ freerange(void *vstart, void *vend)
 // Free the page of physical memory pointed at by v,
 // which normally should have been returned by a
 // call to kalloc().  (The exception is when
-// initializing the allocator; see kinit above.)
+// initializing the slab; see kinit above.)
 void
 kfree(char *v)
 {
@@ -93,4 +94,3 @@ kalloc(void)
     release(&kmem.lock);
   return (char*)r;
 }
-

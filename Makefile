@@ -28,6 +28,8 @@ OBJS = \
 	uart.o\
 	vectors.o\
 	vm.o\
+	slab.o\
+	sysslab.o\
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
@@ -176,6 +178,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_halt\
+	_slabtest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -186,7 +189,7 @@ clean:
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg \
 	*.o *.d *.asm *.sym vectors.S bootblock entryother \
 	initcode initcode.out kernel xv6.img fs.img kernelmemfs mkfs \
-	.gdbinit \
+	.gdbinit TAGS core \
 	$(UPROGS)
 
 # make a printout
@@ -237,7 +240,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 # SKKU operating system
-PROJECTNUM=1
+PROJECTNUM=3
 # enter your ID
 STUDENTID=2011311671
 

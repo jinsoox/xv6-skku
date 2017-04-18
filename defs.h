@@ -69,6 +69,12 @@ void            kfree(char*);
 void            kinit1(void*, void*);
 void            kinit2(void*, void*);
 
+// slab.c
+char *kmalloc(int);
+void kmfree(char *);
+void slabdump();
+void slabinit();
+
 // kbd.c
 void            kbdintr(void);
 
