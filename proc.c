@@ -7,7 +7,7 @@
 #include "proc.h"
 #include "spinlock.h"
 
-struct {
+struct _ptable {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ptable;
@@ -482,4 +482,8 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int getpid(void){
+	return proc->pid;
 }
