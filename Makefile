@@ -29,6 +29,7 @@ OBJS = \
 	vectors.o\
 	vm.o\
 	thread.o\
+	synch.o\
 
 # Cross-compiling (e.g., on Mac OS X)
 # TOOLPREFIX = i386-jos-elf
@@ -178,6 +179,8 @@ UPROGS=\
 	_zombie\
 	_halt\
 	_threadtest\
+	_mutextest1\
+	_mutextest2\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -239,7 +242,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 # SKKU operating system
-PROJECTNUM=5
+PROJECTNUM=6
 # enter your ID
 STUDENTID=2011311671
 

@@ -3,6 +3,7 @@
 #include "param.h"
 #include "memlayout.h"
 #include "mmu.h"
+#include "spinlock.h"
 #include "proc.h"
 #include "x86.h"
 #include "syscall.h"
@@ -103,6 +104,12 @@ extern int sys_thread_create(void);
 extern int sys_thread_exit(void);
 extern int sys_thread_join(void);
 extern int sys_gettid(void);
+extern int sys_mutex_init(void);
+extern int sys_mutex_lock(void);
+extern int sys_mutex_unlock(void);
+extern int sys_cond_init(void);
+extern int sys_cond_wait(void);
+extern int sys_cond_signal(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -131,6 +138,12 @@ static int (*syscalls[])(void) = {
 [SYS_thread_exit] sys_thread_exit,
 [SYS_thread_join] sys_thread_join,
 [SYS_gettid] sys_gettid,
+[SYS_mutex_init] sys_mutex_init,
+[SYS_mutex_lock] sys_mutex_lock,
+[SYS_mutex_unlock] sys_mutex_unlock,
+[SYS_cond_init] sys_cond_init,
+[SYS_cond_wait] sys_cond_wait,
+[SYS_cond_signal] sys_cond_signal,
 };
 
 void

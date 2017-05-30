@@ -5,96 +5,98 @@
 #include "param.h"
 #include "memlayout.h"
 #include "mmu.h"
+#include "spinlock.h"
 #include "proc.h"
+#include "synch.h"
 
-int
+	int
 sys_fork(void)
 {
-  return fork();
+	return fork();
 }
 
-int
+	int
 sys_exit(void)
 {
-  exit();
-  return 0;  // not reached
+	exit();
+	return 0;  // not reached
 }
 
-int
+	int
 sys_wait(void)
 {
-  return wait();
+	return wait();
 }
 
-int
+	int
 sys_kill(void)
 {
-  int pid;
+	int pid;
 
-  if(argint(0, &pid) < 0)
-    return -1;
-  return kill(pid);
+	if(argint(0, &pid) < 0)
+		return -1;
+	return kill(pid);
 }
 
-int
+	int
 sys_getpid(void)
 {
 	return getpid();
 }
 
-int
+	int
 sys_sbrk(void)
 {
-  int addr;
-  int n;
+	int addr;
+	int n;
 
-  if(argint(0, &n) < 0)
-    return -1;
-  addr = proc->sz;
-  if(growproc(n) < 0)
-    return -1;
-  return addr;
+	if(argint(0, &n) < 0)
+		return -1;
+	addr = proc->sz;
+	if(growproc(n) < 0)
+		return -1;
+	return addr;
 }
 
-int
+	int
 sys_sleep(void)
 {
-  int n;
-  uint ticks0;
+	int n;
+	uint ticks0;
 
-  if(argint(0, &n) < 0)
-    return -1;
-  acquire(&tickslock);
-  ticks0 = ticks;
-  while(ticks - ticks0 < n){
-    if(proc->killed){
-      release(&tickslock);
-      return -1;
-    }
-    sleep(&ticks, &tickslock);
-  }
-  release(&tickslock);
-  return 0;
+	if(argint(0, &n) < 0)
+		return -1;
+	acquire(&tickslock);
+	ticks0 = ticks;
+	while(ticks - ticks0 < n){
+		if(proc->killed){
+			release(&tickslock);
+			return -1;
+		}
+		sleep(&ticks, &tickslock);
+	}
+	release(&tickslock);
+	return 0;
 }
 
 // return how many clock tick interrupts have occurred
 // since start.
-int
+	int
 sys_uptime(void)
 {
-  uint xticks;
+	uint xticks;
 
-  acquire(&tickslock);
-  xticks = ticks;
-  release(&tickslock);
-  return xticks;
+	acquire(&tickslock);
+	xticks = ticks;
+	release(&tickslock);
+	return xticks;
 }
 
-int
+	int
 sys_halt(void)
 {
-  outw(0xB004, 0x0|0x2000);
-  return 0;
+	outw(0xB004, 0x0|0x2000);
+	return 0;
 }
 
 int sys_thread_create(void){
@@ -127,4 +129,58 @@ int sys_thread_join(void){
 
 int sys_gettid(void){
 	return gettid();
+}
+
+int sys_mutex_init(void){
+	int mutex;
+
+	if(argint(0, &mutex)<0)
+		return -1;
+
+	return mutex_init((struct mutex_t *)mutex);
+}
+
+int sys_mutex_lock(void){
+	int mutex;
+
+	if(argint(0, &mutex)<0)
+		return -1;
+
+	return mutex_lock((struct mutex_t *)mutex);
+}
+
+int sys_mutex_unlock(void){
+	int mutex;
+
+	if(argint(0, &mutex)<0)
+		return -1;
+
+	return mutex_unlock((struct mutex_t *)mutex);
+}
+
+int sys_cond_init(void){
+	int cond;
+
+	if(argint(0, &cond)<0)
+		return -1;
+
+	return cond_init((struct cond_t *)cond);
+}
+
+int sys_cond_wait(void){
+	int cond, mutex;
+
+	if(argint(0, &cond)<0 || argint(1, &mutex)<0)
+		return -1;
+
+	return cond_wait((struct cond_t *)cond, (struct mutex_t *)mutex);
+}
+
+int sys_cond_signal(void){
+	int cond;
+
+	if(argint(0, &cond)<0)
+		return -1;
+
+	return cond_signal((struct cond_t *)cond);
 }
