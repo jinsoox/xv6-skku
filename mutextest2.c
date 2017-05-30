@@ -62,12 +62,12 @@ main(int argc, char **argv)
 	for(i=0;i<NTHREAD;i++)
 		stack[i] = malloc(4096);
 
-	if((tid[0] = thread_create(do_write, 20, 0, stack[0])) == -1){
+	if((tid[0] = thread_create(do_write, 30, 0, stack[0])) == -1){
 		printf(1, "thread creation failed\n");
 		exit();
 	}
 
-	if((tid[1] = thread_create(do_read, 20, 0, stack[1])) == -1){
+	if((tid[1] = thread_create(do_read, 10, 0, stack[1])) == -1){
 		printf(1, "thread creation failed\n");
 		exit();
 	}
